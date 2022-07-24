@@ -1,0 +1,16 @@
+.env
+
+.git/
+.gitignore
+
+bin/
+scripts/
+
+.git
+.gitattributes
+.gitignore
+
+README.md
+CHANGELOG.md
+docker-compose.yml
+Dockerfile
