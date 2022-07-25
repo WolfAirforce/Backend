@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	t "airforce/cmd/api/services/timer"
-
 	"net/http"
 
+	s "airforce/internal/timer"
+
 	"github.com/gin-gonic/gin"
+
+	svc "airforce/cmd/api/services"
 )
 
 type GetRecordsQuery struct {
@@ -16,7 +18,7 @@ func HandlerGetRecentRecords(c *gin.Context) {
 	var query GetRecordsQuery
 
 	if c.ShouldBindQuery(&query) == nil {
-		rl, err := t.Timer.GetRecords()
+		rl, err := s.GetRecords(svc.Database.SurfTimer)
 
 		if err != nil {
 			c.String(http.StatusInternalServerError, "unexpected error occured")

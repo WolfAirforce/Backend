@@ -1,14 +1,16 @@
 package controllers
 
 import (
-	t "airforce/cmd/api/services/timer"
+	s "airforce/internal/timer"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	svc "airforce/cmd/api/services"
 )
 
 func HandlerGetPlayerByID(c *gin.Context) {
-	p, err := t.Timer.GetPlayerByID64(c.Param("id"))
+	p, err := s.GetPlayerByID64(svc.Database.SurfTimer, c.Param("id"))
 
 	if err != nil {
 		c.String(http.StatusNotAcceptable, "invalid steam id was provided")

@@ -21,6 +21,8 @@
 go.work
 
 .env
+config.json
+
 bin/
 
 *.db

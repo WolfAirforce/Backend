@@ -2,17 +2,31 @@ package main
 
 import (
 	"airforce/cmd/api/controllers"
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cache"
 	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
+
+	svc "airforce/cmd/api/services"
 )
 
 func main() {
+	p, e := os.LookupEnv("CFG_FILE_PATH")
+
+	if !e {
+		p = "/tmp/config.json"
+	}
+
+	svc.Initialize(p)
+
+	gin.SetMode(svc.Config.Server.Mode)
+
 	r := gin.Default()
-	r.SetTrustedProxies([]string{"192.168.0.186"})
+	r.SetTrustedProxies(svc.Config.Server.TrustedProxies)
 
 	s := persistence.NewInMemoryStore(time.Minute)
 
@@ -30,5 +44,5 @@ func main() {
 
 	r.POST("/callback/kofi", controllers.PostKofiCallback)
 
-	r.Run(":8080")
+	r.Run(fmt.Sprintf(":%d", svc.Config.Server.Port))
 }

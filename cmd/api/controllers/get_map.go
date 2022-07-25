@@ -3,13 +3,14 @@ package controllers
 import (
 	"net/http"
 
-	t "airforce/cmd/api/services/timer"
+	svc "airforce/cmd/api/services"
+	s "airforce/internal/timer"
 
 	"github.com/gin-gonic/gin"
 )
 
 func HandlerGetMap(c *gin.Context) {
-	mapData, err := t.Timer.GetMapInformation(c.Param("name"))
+	mapData, err := s.GetMapInformation(svc.Database.SurfTimer, c.Param("name"))
 
 	if err != nil {
 		c.String(http.StatusNotAcceptable, "invalid map name was provided")

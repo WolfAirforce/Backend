@@ -3,7 +3,7 @@ module airforce
 go 1.18
 
 require (
-	github.com/disgoorg/disgo v0.13.5
+	github.com/disgoorg/disgo v0.13.8
 	github.com/disgoorg/snowflake/v2 v2.0.0
 	github.com/gin-contrib/cache v1.2.0
 	github.com/gin-gonic/gin v1.8.1

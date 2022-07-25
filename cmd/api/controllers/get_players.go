@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	t "airforce/cmd/api/services/timer"
+	s "airforce/internal/timer"
 
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	svc "airforce/cmd/api/services"
 )
 
 type GetPlayersQuery struct {
@@ -18,7 +20,13 @@ func HandlerGetPlayers(c *gin.Context) {
 	var query GetPlayersQuery
 
 	if c.ShouldBindQuery(&query) == nil {
-		pl, err := t.Timer.GetPlayers(query.SortBy, query.SortOrder, 25, (query.Page-1)*25)
+		pl, err := s.GetPlayers(
+			svc.Database.SurfTimer,
+			query.SortBy,
+			query.SortOrder,
+			25,
+			(query.Page-1)*25,
+		)
 
 		if err != nil {
 			c.String(http.StatusInternalServerError, "unexpected error occured")

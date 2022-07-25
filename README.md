@@ -5,13 +5,17 @@ being used in production for my server network [Wolf Airforce](https://wolf.airf
 
 ## Requirements
 
+### Basic
+
 - Go 1.18
+- MySQL or MariaDB
+
+### Game Server
+
 - [SurfTimer](https://github.com/surftimer/SurfTimer)
 - [tVip](https://github.com/Totenfluch/tVip)
-- SQL server
-  - One table for SurfTimer records
-  - Another for tVip entries
 
 ## Configuration
 
-You may configure everything you need in the `.env`, as shown in `.env.template`.
+You may configure everything you need in the `config.json` file, with an example
+shown in [`config.json.template`](./config.json.template).

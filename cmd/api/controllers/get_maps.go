@@ -3,13 +3,15 @@ package controllers
 import (
 	"net/http"
 
+	s "airforce/internal/timer"
+
 	"github.com/gin-gonic/gin"
 
-	t "airforce/cmd/api/services/timer"
+	svc "airforce/cmd/api/services"
 )
 
 func HandlerGetMaps(c *gin.Context) {
-	mapList, err := t.Timer.GetAllMapInformation()
+	mapList, err := s.GetAllMapInformation(svc.Database.SurfTimer)
 
 	if err != nil {
 		c.String(http.StatusInternalServerError, "unexpected error occured")

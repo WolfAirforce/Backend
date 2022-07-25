@@ -5,55 +5,36 @@ import (
 	"fmt"
 	"strings"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
 	"airforce/internal/steam"
-	tdb "airforce/internal/timer/database"
 	"airforce/internal/timer/database/models"
 )
 
-type SurfTimer struct {
-	Database *gorm.DB
-}
-
-func (st SurfTimer) Connect(ci *tdb.ConnectionInformation) error {
-	uri := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", ci.Username, ci.Password, ci.Host, ci.Port, ci.DatabaseName)
-	db, err := gorm.Open(mysql.Open(uri), &gorm.Config{})
-
-	if err != nil {
-		return err
-	}
-
-	st.Database = db
-
-	return nil
-}
-
 /* Player functions */
-func (st SurfTimer) GetPlayerByID(steamId string) (player models.PlayerRank, err error) {
+func GetPlayerByID(db *gorm.DB, steamId string) (player models.PlayerRank, err error) {
 	if !steam.IsSteamID(steamId) {
 		return models.PlayerRank{}, errors.New("provided steam id is not valid")
 	}
 
-	res := st.Database.First(&player, "steamid = ?", steamId)
+	res := db.First(&player, "steamid = ?", steamId)
 	err = res.Error
 
 	return
 }
 
-func (st SurfTimer) GetPlayerByID64(steamId64 string) (player models.PlayerRank, err error) {
+func GetPlayerByID64(db *gorm.DB, steamId64 string) (player models.PlayerRank, err error) {
 	if !steam.IsSteamID64(steamId64) {
 		return models.PlayerRank{}, errors.New("provided steam id is not valid")
 	}
 
-	res := st.Database.First(&player, "steamid64 = ?", steamId64)
+	res := db.First(&player, "steamid64 = ?", steamId64)
 	err = res.Error
 
 	return
 }
 
-func (st SurfTimer) GetPlayers(sortBy string, sortOrder string, limit int, offset int) (playerList []models.PlayerRank, err error) {
+func GetPlayers(db *gorm.DB, sortBy string, sortOrder string, limit int, offset int) (playerList []models.PlayerRank, err error) {
 	sortBy = strings.ToLower(sortBy)
 	sortOrder = strings.ToLower(sortOrder)
 
@@ -71,15 +52,15 @@ func (st SurfTimer) GetPlayers(sortBy string, sortOrder string, limit int, offse
 		return nil, errors.New("sort order must be one of asc, desc")
 	}
 
-	res := st.Database.Order(fmt.Sprintf("%s %s", sortBy, sortOrder)).Limit(limit).Offset(offset).Find(&playerList)
+	res := db.Order(fmt.Sprintf("%s %s", sortBy, sortOrder)).Limit(limit).Offset(offset).Find(&playerList)
 	err = res.Error
 
 	return
 }
 
 /* Records functions */
-func (st SurfTimer) GetRecords() (rl []models.LatestRecords, err error) {
-	res := st.Database.Limit(10).Offset(0).Order("date desc").Find(&rl)
+func GetRecords(db *gorm.DB) (rl []models.LatestRecords, err error) {
+	res := db.Limit(10).Offset(0).Order("date desc").Find(&rl)
 	err = res.Error
 
 	return
@@ -146,15 +127,15 @@ const (
 	singleMapQuery = baseMapQuery + " WHERE ck_maptier.mapname = ?"
 )
 
-func (st SurfTimer) GetAllMapInformation() (ml []models.CustomMap, err error) {
-	res := st.Database.Raw(baseMapQuery).Scan(&ml)
+func GetAllMapInformation(db *gorm.DB) (ml []models.CustomMap, err error) {
+	res := db.Raw(baseMapQuery).Scan(&ml)
 	err = res.Error
 
 	return
 }
 
-func (st SurfTimer) GetMapInformation(mapName string) (m models.CustomMap, err error) {
-	res := st.Database.Raw(singleMapQuery, mapName).Scan(&m)
+func GetMapInformation(db *gorm.DB, mapName string) (m models.CustomMap, err error) {
+	res := db.Raw(singleMapQuery, mapName).Scan(&m)
 	err = res.Error
 
 	return

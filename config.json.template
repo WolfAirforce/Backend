@@ -1,0 +1,38 @@
+{
+  "directory": {
+    "maps": "/maps"
+  },
+  "database": {
+    "surf": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "surf",
+      "pass": "surf",
+      "name": "surf"
+    },
+    "vip": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "vip",
+      "pass": "vip",
+      "name": "vip"
+    }
+  },
+  "notifications": {
+    "kofi": {
+      "on_payment": "https://discord.com/..."
+    }
+  },
+  "secrets": {
+    "kofi": {
+      "verification_token": "..."
+    }
+  },
+  "server": {
+    "mode": "release",
+    "port": 8080,
+    "trusted_proxies": [
+      "192.168.0.123"
+    ]
+  }
+}

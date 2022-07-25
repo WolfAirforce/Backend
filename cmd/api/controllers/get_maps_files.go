@@ -6,27 +6,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	svc "airforce/cmd/api/services"
+
 	"github.com/gin-gonic/gin"
 )
 
-var mapFilePath string
-
-func init() {
-	var e bool
-
-	mapFilePath, e = os.LookupEnv("MAP_FOLDER")
-
-	if !e {
-		mapFilePath = "/maps"
-	}
-
-	if _, err := os.Stat(mapFilePath); os.IsNotExist(err) {
-		panic(err)
-	}
-}
-
 func HandlerGetMapsFiles(c *gin.Context) {
-	files, err := os.ReadDir(mapFilePath)
+	fileList, err := os.ReadDir(svc.Config.Directory.Maps)
 
 	if err != nil {
 		panic(err)
@@ -34,9 +20,9 @@ func HandlerGetMapsFiles(c *gin.Context) {
 
 	var mapFileList []string
 
-	for _, item := range files {
-		if !item.IsDir() {
-			fileName := item.Name()
+	for _, file := range fileList {
+		if !file.IsDir() {
+			fileName := file.Name()
 			fileExt := filepath.Ext(fileName)
 
 			if fileExt == ".bsp" {

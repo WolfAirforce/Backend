@@ -7,8 +7,8 @@ COPY . .
 RUN go mod download
 RUN go build -o /app/bin/api ./cmd/api
 
-EXPOSE 8080
-
 RUN chmod +x /app/bin/api
+
+EXPOSE 8080
 
 CMD [ "/app/bin/api" ]
