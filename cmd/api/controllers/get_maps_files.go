@@ -9,20 +9,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var mapFileList []string
+var mapFilePath string
 
 func init() {
-	m, exists := os.LookupEnv("MAP_FOLDER")
+	var e bool
 
-	if !exists {
-		m = "/maps"
+	mapFilePath, e = os.LookupEnv("MAP_FOLDER")
+
+	if !e {
+		mapFilePath = "/maps"
 	}
 
-	files, err := os.ReadDir(m)
+	if _, err := os.Stat(mapFilePath); os.IsNotExist(err) {
+		panic(err)
+	}
+}
+
+func HandlerGetMapsFiles(c *gin.Context) {
+	files, err := os.ReadDir(mapFilePath)
 
 	if err != nil {
 		panic(err)
 	}
+
+	var mapFileList []string
 
 	for _, item := range files {
 		if !item.IsDir() {
@@ -34,8 +44,6 @@ func init() {
 			}
 		}
 	}
-}
 
-func HandlerGetMapsFiles(c *gin.Context) {
 	c.JSON(http.StatusOK, mapFileList)
 }

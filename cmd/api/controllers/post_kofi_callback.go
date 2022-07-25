@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,19 +12,27 @@ import (
 	"airforce/internal/vip/response"
 )
 
-type FormData struct {
-	Data response.KofiCallbackData `form:"data" binding:"required"`
+var kofiVerificationToken string
+
+func init() {
+	var e bool
+
+	if kofiVerificationToken, e = os.LookupEnv("KOFI_VERIFICATION_TOKEN"); !e || kofiVerificationToken == "" {
+		panic(errors.New("kofi verification token is not present"))
+	}
 }
 
 func PostKofiCallback(c *gin.Context) {
-	var f FormData
+	var f struct {
+		Data response.KofiCallbackData `form:"data" binding:"required"`
+	}
 
 	if err := c.ShouldBind(&f); err != nil {
 		c.String(http.StatusBadRequest, "invalid data")
 		return
 	}
 
-	if os.Getenv("KOFI_VERIFICATION_TOKEN") != f.Data.VerificationToken {
+	if kofiVerificationToken != f.Data.VerificationToken {
 		c.String(http.StatusBadRequest, "invalid verification token was given")
 		return
 	}
