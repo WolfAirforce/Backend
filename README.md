@@ -19,3 +19,13 @@ being used in production for my server network [Wolf Airforce](https://wolf.airf
 
 You may configure everything you need in the `config.json` file, with an example
 shown in [`config.json.template`](./config.json.template).
+
+## Building
+
+### Docker
+
+`docker build . -t ghcr.io/wolfairforce/backend:latest`
+
+Then run with the following.
+
+`docker run -v $(pwd)/config.json:/tmp/config.json -p 8080:8080 ghcr.io/wolfairforce/backend:latest`

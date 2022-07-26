@@ -1,4 +1,5 @@
 .env
+config.json
 
 .git/
 .gitignore
@@ -12,5 +13,6 @@ scripts/
 
 README.md
 CHANGELOG.md
+
 docker-compose.yml
 Dockerfile
